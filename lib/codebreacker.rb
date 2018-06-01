@@ -1,5 +1,2 @@
-require "codebreacker/version"
-
-module Codebreacker
-  # Your code goes here...
-end
+require_relative 'codebreacker/version'
+require_relative 'codebreacker/game'
