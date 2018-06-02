@@ -18,7 +18,7 @@ module Codebreacker
     describe '#answer_on' do
       before { game.instance_variable_set('@secret', '1234') }
 
-      context 'validate user input' do
+      context 'validates user input' do
         it 'calls #validate' do
           expect(game).to receive(:validate).with('1234')
           game.answer_on('1234')
@@ -37,6 +37,10 @@ module Codebreacker
         end
       end
 
+      context 'Decrements amount of attempts if input is correct' do
+        it { expect { game.answer_on('1234') }.to change { game.attempts }.by(-1) }
+      end
+
       context "gives right answers on user's input" do
         it '"++++"  when user guess secret' do
           expect(game.answer_on('1234')).to eql('++++')
@@ -50,18 +54,24 @@ module Codebreacker
           expect(game.answer_on('4321')).to eql('----')
         end
 
-        it '"+-"  when user gues second num exactly and third nearly' do
+        it '"+-"  when user guess second num exactly and third nearly' do
           expect(game.answer_on('6246')).to eql('+-')
+        end
+
+        it 'empty when user is wrong absolutely' do
+          expect(game.answer_on('6656')).to eql('')
         end
       end
     end
-    # describe '#answer_on'"#answer_on" do
-    #   let(:input) { '1234' }
+    describe '#won' do
+      it 'returns true if answer is "++++" ' do
+        game.instance_variable_set('@answer', '++++')
+        expect(game).to be_won
+      end
 
-    #   it "calls validate with params '1234' " do
-    #     expect(subject).to receive(:validate).with('1234')
-    #     game.answer_on(input)
-    #   end
-    # end
+      it 'returns false if answer is wrong' do
+        expect(game).not_to be_won
+      end
+    end
   end
 end
