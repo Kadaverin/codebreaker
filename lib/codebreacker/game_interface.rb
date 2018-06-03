@@ -1,8 +1,8 @@
 module Codebreacker
   # Interface for console game 'Codebreacker''
   class GameInterface
-    def initialize 
-      @game = Game.new
+    def initialize(game = Game.new)
+      @game = game
     end
 
     def input
@@ -14,13 +14,17 @@ module Codebreacker
       play
     end
 
+    def show(smtg)
+      puts smtg
+    end
+
     def play
       until @game.attempts.zero?
 
         case guess = input
         when 'r' then show_rules
         when 'h' then give_a_hint
-        else answer_on guess
+        else show answer_on guess
         end
 
         break if @game.won?
@@ -41,7 +45,7 @@ module Codebreacker
     def answer_on(input)
       @game.answer_on input
     rescue ArgumentError => err
-      puts err.message
+      err.message
     end
 
     def ask_for_restart

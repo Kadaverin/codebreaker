@@ -2,11 +2,6 @@ module Codebreacker
   RSpec.describe GameInterface do
     let(:game_i) { GameInterface.new }
 
-    def break_game_loop
-      game_i.instance_variable_get('@game')
-            .instance_variable_set('@attempts', 0)
-    end
-
     describe '#start_game' do
       before do
         allow(game_i).to receive(:greeting)
@@ -19,6 +14,11 @@ module Codebreacker
     end
 
     describe '#play' do
+      # have to stub @game.won? because of infinit loop
+      before do
+        allow(game_i.instance_variable_get('@game')).to receive(:won?) { true }
+        allow(game_i).to receive(:show)
+      end
       after { game_i.play }
 
       context 'user tries to guess' do
@@ -29,7 +29,6 @@ module Codebreacker
         end
 
         it 'calls #answer_on ' do
-          allow(game_i).to receive(:answer_on) { break_game_loop }
           expect(game_i).to receive(:answer_on).with('2134')
         end
 
@@ -39,20 +38,17 @@ module Codebreacker
         end
 
         it 'calls #handle_won_game when user wins' do
-          allow(game_i.instance_variable_get('@game')).to receive(:won?) { true }
           expect(game_i).to receive(:handle_game_won)
         end
       end
 
       context 'user wants help' do
         it 'calls #give_a_hint when user types "h"' do
-          allow(game_i).to receive(:give_a_hint) { break_game_loop }
           allow(game_i).to receive(:input).and_return('h')
           expect(game_i).to receive(:give_a_hint)
         end
 
         it 'calls #show_rules when user types "r"' do
-          allow(game_i).to receive(:show_rules) { break_game_loop }
           allow(game_i).to receive(:input).and_return('r')
           expect(game_i).to receive(:show_rules)
         end
@@ -61,8 +57,15 @@ module Codebreacker
 
     describe '#answer_on' do
       it 'calls @game#answer_on' do
-        expect(game_i.instance_variable_get('@game')).to receive(:answer_on).with('1234')
+        expect(game_i.instance_variable_get('@game'))
+          .to receive(:answer_on).with('1234')
         game_i.answer_on('1234')
+      end
+      it 'returns error message if rescue ArgumentError' do
+        allow(game_i.instance_variable_get('@game')).to receive(:answer_on)
+          .and_raise(ArgumentError, 'message')
+        expect(game_i.answer_on('sdasd')).to be_eql('message')
+        # game_i.answer_on('sdasd')
       end
     end
   end
