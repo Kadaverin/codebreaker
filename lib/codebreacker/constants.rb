@@ -4,4 +4,5 @@ module Codebreacker
   GREETING_MESSAGE = 'hello'.freeze
   CONGRATULATION_MESSAGE = 'You are win!'.freeze
   SUPPORTING_MESSAGE = 'you are looser!'.freeze
+  ATTEMPTS_AMOUNT = 8
 end

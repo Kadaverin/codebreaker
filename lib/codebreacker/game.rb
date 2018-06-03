@@ -2,7 +2,6 @@
 module Codebreacker
   # //
   class Game
-    ATTEMPTS_AMOUNT = 8
     attr_reader :attempts, :answer
 
     def initialize
@@ -33,6 +32,7 @@ module Codebreacker
     end
 
     def form_an_answer_for(input)
+      @answer = ''
       input.each_char.with_index do |guess, index|
         if    guess == @secret[index] then  @answer << '+'
         elsif @secret.include? guess  then  @answer << '-'
