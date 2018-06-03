@@ -46,7 +46,9 @@ module Codebreacker
       show GAME_RULES
     end
 
-    def give_a_hint; end
+    def give_a_hint
+      show ' NOT IMPLEMENTED'
+    end
 
     def answer_on(input)
       @game.answer_on input
