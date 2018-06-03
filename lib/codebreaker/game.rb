@@ -1,5 +1,5 @@
 
-module Codebreacker
+module Codebreaker
   # //
   class Game
     attr_reader :attempts, :answer

@@ -1,4 +1,4 @@
-module Codebreacker
+module Codebreaker
   # Interface for console game 'Codebreacker''
   class GameInterface
     def initialize(game = Game.new)

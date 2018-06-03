@@ -1,5 +1,5 @@
 
-module Codebreacker
+module Codebreaker
   RSpec.describe Game do
     let(:game) { Game.new }
 
@@ -11,7 +11,7 @@ module Codebreacker
       end
 
       it 'set attempts to Game::ATTEMPTS_AMOUNT' do
-        expect(game.attempts).to eql(Game::ATTEMPTS_AMOUNT)
+        expect(game.attempts).to eql(ATTEMPTS_AMOUNT)
       end
     end
 

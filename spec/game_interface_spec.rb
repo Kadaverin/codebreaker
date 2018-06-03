@@ -1,4 +1,4 @@
-module Codebreacker
+module Codebreaker
   RSpec.describe GameInterface do
     let(:game_i) { GameInterface.new }
 
@@ -69,7 +69,7 @@ module Codebreacker
     end
 
     describe '#show_rules' do
-      it { expect(game_i).to receive(:show).with(Codebreacker::GAME_RULES) }
+      it { expect(game_i).to receive(:show).with(GAME_RULES) }
       after { game_i.show_rules }
     end
 
