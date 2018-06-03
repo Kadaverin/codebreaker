@@ -5,17 +5,9 @@ module Codebreacker
       @game = game
     end
 
-    def input
-      gets.chomp.downcase
-    end
-
     def start_game
       greeting
       play
-    end
-
-    def show(smtg)
-      puts smtg
     end
 
     def play
@@ -29,15 +21,29 @@ module Codebreacker
 
         break if @game.won?
       end
-      @game.won? ? handle_game_won : handle_game_lost
+      @game.won? ? handle_won_game : handle_lost_game
     end
 
-    def handle_game_won; end
+    def input
+      gets.chomp.downcase
+    end
 
-    def handle_game_lost; end
+    def show(smtg)
+      puts smtg
+    end
+
+    def handle_won_game
+      show CONGRATULATION_MESSAGE
+      ask_for_restart
+    end
+
+    def handle_lost_game
+      show SUPPORTING_MESSAGE
+      ask_for_restart
+    end
 
     def show_rules
-      puts 'rules'
+      show GAME_RULES
     end
 
     def give_a_hint; end
@@ -49,11 +55,17 @@ module Codebreacker
     end
 
     def ask_for_restart
-      puts 'restart?'
+      show ASK_FOR_RESTART_MESSAGE
+      restart_game if input == 'y'
+    end
+
+    def restart_game
+      @game.new_game
+      play
     end
 
     def greeting
-      puts 'hello'
+      show GREETING_MESSAGE
     end
   end
 end
