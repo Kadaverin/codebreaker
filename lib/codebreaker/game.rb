@@ -11,6 +11,7 @@ module Codebreaker
     def new_game
       @attempts = ATTEMPTS_AMOUNT
       @secret = create_code
+      @hints = HINTS_AMOUNT
       @answer = ''
     end
 
@@ -23,6 +24,12 @@ module Codebreaker
 
     def won?
       @answer == '++++'
+    end
+
+    def hint
+      return NO_HINTS_LEFT if @hints.zero?
+      @hints -= 1
+      @secret[rand(0..3)]
     end
 
     private

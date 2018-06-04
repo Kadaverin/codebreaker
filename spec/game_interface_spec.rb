@@ -107,6 +107,14 @@ module Codebreaker
       end
     end
 
+    describe '#give_a_hint' do
+      it 'calls #show with @game#hint' do
+        expect(game_i).to receive(:show)
+          .with(game_i.instance_variable_get('@game').hint)
+        game_i.give_a_hint
+      end
+    end
+
     describe '#restart_game' do
       it 'reset @game and calls #play' do
         expect(game_i.instance_variable_get('@game')).to receive(:new_game).ordered

@@ -1,8 +1,9 @@
 module Codebreaker
   # Interface for console game 'Codebreacker''
   class GameInterface
-    def initialize(game = Game.new)
+    def initialize(game = Game.new, path_to_log_file)
       @game = game
+      @path = path_to_log_file
     end
 
     def start_game
@@ -47,7 +48,7 @@ module Codebreaker
     end
 
     def give_a_hint
-      show ' NOT IMPLEMENTED'
+      show @game.hint
     end
 
     def answer_on(input)
@@ -64,6 +65,10 @@ module Codebreaker
     def restart_game
       @game.new_game
       play
+    end
+
+    def save_result
+
     end
 
     def greeting

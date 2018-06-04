@@ -73,5 +73,26 @@ module Codebreaker
         expect(game).not_to be_won
       end
     end
+
+    describe 'hints' do
+      it 'decrements hitns amount' do
+        expect { game.hint }.to change { game.instance_variable_get('@hints') }.by(-1)
+      end
+
+      it { expect(game.hint).to be_instance_of String }
+
+      it 'returns only one character' do
+        expect(game.hint.length).to eql(1)
+      end
+
+      it 'returns one of secret number if @hints != 0' do
+        expect(game.instance_variable_get('@secret')).to include(game.hint)
+      end
+
+      it 'returns HO_HINT_LEFT if Game@hints = 0' do
+        game.instance_variable_set('@hints', 0)
+        expect(game.hint).to eql(NO_HINTS_LEFT)
+      end
+    end
   end
 end
