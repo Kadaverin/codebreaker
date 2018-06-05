@@ -33,14 +33,19 @@ module Codebreaker
       puts smtg
     end
 
+    def final_interact_with_user
+      ask_for_save_result
+      ask_for_restart
+    end
+
     def handle_won_game
       show CONGRATULATION_MESSAGE
-      ask_for_restart
+      final_interact_with_user
     end
 
     def handle_lost_game
       show SUPPORTING_MESSAGE
-      ask_for_restart
+      final_interact_with_user
     end
 
     def show_rules
@@ -67,12 +72,43 @@ module Codebreaker
       play
     end
 
-    def save_result
-
-    end
-
     def greeting
       show GREETING_MESSAGE
+    end
+
+    def ask_for_save_result
+      show ASK_FOR_SAVE_RESULT_MESSAGE
+      save_result if input == 'y'
+    end
+
+    def save_result
+      user = ask_user_name
+      File.open(@path, 'a') do |f|
+        f.puts game_statistics_for user
+      end
+    end
+
+    def ask_user_name
+      show ASK_USER_NAME_MESSAGE
+      input.capitalize
+    end
+
+    def game_statistics_for(user_name)
+      status = @game.attempts.zero? ? 'Looser' : 'Winner'
+
+      "User name : #{user_name} \n" \
+      "Game status: #{status} \n" \
+      "Used hints: #{used_hints} \n" \
+      "Used attempts: #{used_attempts} \n"\
+      "_________________________________________________\n"
+    end
+
+    def used_attempts
+      ATTEMPTS_AMOUNT - @game.attempts
+    end
+
+    def used_hints
+      HINTS_AMOUNT - @game.hints
     end
   end
 end

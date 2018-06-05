@@ -92,24 +92,32 @@ module Codebreaker
     end
 
     describe '#handle_lost_game' do
-      it 'show congratulations and #ask_for_restart' do
+      it 'shows support  and calls #final_interact_with_user' do
         expect(game_i).to receive(:show).with(SUPPORTING_MESSAGE).ordered
-        expect(game_i).to receive(:ask_for_restart).with(no_args).ordered
+        expect(game_i).to receive(:final_interact_with_user).with(no_args).ordered
         game_i.handle_lost_game
       end
     end
 
     describe '#handle_won_game' do
-      it 'show support and #ask_for_restart ' do
+      it 'shows congratulations  and  calls #final_interact_with_user ' do
         expect(game_i).to receive(:show).with(CONGRATULATION_MESSAGE).ordered
-        expect(game_i).to receive(:ask_for_restart).with(no_args).ordered
+        expect(game_i).to receive(:final_interact_with_user).with(no_args).ordered
         game_i.handle_won_game
+      end
+    end
+
+    describe '#final_interact_with_user' do 
+      it 'calls #ask_for_save_result and #ask_for_restart' do 
+        expect(game_i).to receive(:ask_for_save_result).with(no_args).ordered
+        expect(game_i).to receive(:ask_for_restart).with(no_args).ordered
+        game_i.final_interact_with_user
       end
     end
 
     describe '#give_a_hint' do
       it 'calls #show with @game#hint' do
-        allow(game_i.instance_variable_get('@game')).to receive(:hint){'2'}
+        allow(game_i.instance_variable_get('@game')).to receive(:hint) { '2' }
         expect(game_i).to receive(:show).with('2')
         game_i.give_a_hint
       end
@@ -120,6 +128,46 @@ module Codebreaker
         expect(game_i.instance_variable_get('@game')).to receive(:new_game).ordered
         expect(game_i).to receive(:play).ordered
         game_i.restart_game
+      end
+    end
+
+    describe '#ask_for_save_result' do
+      after { game_i.ask_for_save_result }
+
+      it { expect(game_i).to receive(:show).with(ASK_FOR_SAVE_RESULT_MESSAGE) }
+
+      it 'call #save_result if answer is "y" ' do
+        allow(game_i).to receive(:show)
+        allow(game_i).to receive(:input).and_return('y')
+        expect(game_i).to receive(:save_result)
+      end
+    end
+
+    describe '#save_result' do
+      before do
+        allow(game_i).to receive(:ask_user_name)
+        allow(game_i).to receive(:game_statistics_for)
+      end
+
+      it 'calls #ask_user_name and #game_statistics_for(user_name)' do
+        expect(game_i).to receive(:ask_user_name).ordered
+        expect(game_i).to receive(:game_statistics_for).ordered
+      end
+
+      after { game_i.save_result }
+    end
+
+    describe '#used_attempts' do
+      it 'returns right value' do
+        allow(game_i.instance_variable_get('@game')).to receive(:attempts) { 2 }
+        expect(game_i.used_attempts).to be_eql(ATTEMPTS_AMOUNT - 2)
+      end
+    end
+
+    describe '#used_hints' do
+      it 'returns right value' do
+        allow(game_i.instance_variable_get('@game')).to receive(:hints) { 2 }
+        expect(game_i.used_hints).to be_eql(HINTS_AMOUNT - 2)
       end
     end
   end

@@ -2,7 +2,7 @@
 module Codebreaker
   # //
   class Game
-    attr_reader :attempts, :answer
+    attr_reader :attempts, :answer, :hints
 
     def initialize
       new_game
