@@ -7,7 +7,5 @@
 /spec/reports/
 /tmp/
 
-log_file.txt
-
 # rspec failure tracking
 .rspec_status

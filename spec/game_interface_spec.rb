@@ -107,8 +107,8 @@ module Codebreaker
       end
     end
 
-    describe '#final_interact_with_user' do 
-      it 'calls #ask_for_save_result and #ask_for_restart' do 
+    describe '#final_interact_with_user' do
+      it 'calls #ask_for_save_result and #ask_for_restart' do
         expect(game_i).to receive(:ask_for_save_result).with(no_args).ordered
         expect(game_i).to receive(:ask_for_restart).with(no_args).ordered
         game_i.final_interact_with_user
