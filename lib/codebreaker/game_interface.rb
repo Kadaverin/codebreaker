@@ -1,7 +1,7 @@
 module Codebreaker
   # Interface for console game 'Codebreacker''
   class GameInterface
-    def initialize(game = Game.new, path_to_log_file)
+    def initialize(game = Game.new, path_to_log_file = './log_file')
       @game = game
       @path = path_to_log_file
     end
