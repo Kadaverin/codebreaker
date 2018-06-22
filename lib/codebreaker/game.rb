@@ -2,7 +2,7 @@
 module Codebreaker
   # //
   class Game
-    attr_reader :attempts, :answer, :hints
+    attr_reader :attempts, :answer, :hints, :history
 
     def initialize
       new_game
@@ -11,6 +11,7 @@ module Codebreaker
     def new_game
       @attempts = ATTEMPTS_AMOUNT
       @secret = create_code
+      @history = {}
       @hints = HINTS_AMOUNT
       @answer = ''
     end
@@ -18,6 +19,7 @@ module Codebreaker
     def answer_on(input)
       validate input
       form_an_answer_for input
+      @history[input] = @answer
       @attempts -= 1
       @answer
     end
@@ -42,7 +44,7 @@ module Codebreaker
       @answer = ''
       input.each_char.with_index do |guess, index|
         if    guess == @secret[index] then  @answer << '+'
-        elsif @secret.include? guess  then  @answer << '-'
+        elsif @secret[index..-1].include? guess then @answer << '-'
         end
       end
     end
