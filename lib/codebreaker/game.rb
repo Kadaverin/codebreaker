@@ -17,6 +17,7 @@ module Codebreaker
     end
 
     def answer_on(input)
+      @answer = ''
       validate input
       form_an_answer_for input
       @history[input] = @answer
@@ -41,12 +42,14 @@ module Codebreaker
     end
 
     def form_an_answer_for(input)
-      @answer = ''
+      temp = @secret.clone
       input.each_char.with_index do |guess, index|
-        if    guess == @secret[index] then  @answer << '+'
-        elsif @secret[index..-1].include? guess then @answer << '-'
+        if guess == @secret[index]
+          @answer << '+'
+          temp.slice! guess
         end
       end
+      @answer << '-' * (temp.chars & input.chars).length
     end
 
     def validate(input)
