@@ -2,27 +2,27 @@
 module Codebreaker
   # //
   class Game
-    attr_reader :attempts, :answer, :hints, :history
+    attr_reader :attempts_left, :answer, :hints_left, :history
 
     def initialize
       new_game
     end
 
     def new_game
-      @attempts = ATTEMPTS_AMOUNT
       @secret = create_code
       @history = {}
-      @hints = HINTS_AMOUNT
       @answer = ''
+      @hints_left = HINTS_AMOUNT
+      @attempts_left = ATTEMPTS_AMOUNT
     end
 
     def answer_on(input)
       @answer = ''
       validate input
       form_an_answer_for input
-      @history[input] = @answer
-      @attempts -= 1
-      @answer
+      @history[input] = answer
+      @attempts_left -= 1
+      answer
     end
 
     def won?
@@ -30,9 +30,17 @@ module Codebreaker
     end
 
     def hint
-      return NO_HINTS_LEFT if @hints.zero?
-      @hints -= 1
+      return NO_HINTS_LEFT if @hints_left.zero?
+      @hints_left -= 1
       @secret[rand(0..3)]
+    end
+
+    def used_attempts
+      ATTEMPTS_AMOUNT - attempts_left
+    end
+
+    def used_hints
+      HINTS_AMOUNT - hints_left
     end
 
     private
@@ -46,9 +54,11 @@ module Codebreaker
       input.each_char.with_index do |guess, index|
         if guess == @secret[index]
           @answer << '+'
-          temp.slice! guess
+          temp[index] = 'x'  # fake value
+          input[index] = 'y' # another fake value
         end
       end
+      # this fake values will never intersect, so we can do this
       @answer << '-' * (temp.chars & input.chars).length
     end
 

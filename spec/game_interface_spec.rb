@@ -33,6 +33,7 @@ module Codebreaker
         end
 
         it 'calls #handle_lost_game when user loses' do
+          allow(game_i.instance_variable_get('@game')).to receive(:attempts_left) { 0 }
           allow(game_i.instance_variable_get('@game')).to receive(:won?) { false }
           expect(game_i).to receive(:handle_lost_game)
         end
@@ -136,7 +137,7 @@ module Codebreaker
 
       it { expect(game_i).to receive(:show).with(ASK_FOR_SAVE_RESULT_MESSAGE) }
 
-      it 'call #save_result if answer is "y" ' do
+      it 'calls #save_result if answer is "y" ' do
         allow(game_i).to receive(:show)
         allow(game_i).to receive(:input).and_return('y')
         expect(game_i).to receive(:save_result)
@@ -155,20 +156,6 @@ module Codebreaker
       end
 
       after { game_i.save_result }
-    end
-
-    describe '#used_attempts' do
-      it 'returns right value' do
-        allow(game_i.instance_variable_get('@game')).to receive(:attempts) { 2 }
-        expect(game_i.used_attempts).to be_eql(ATTEMPTS_AMOUNT - 2)
-      end
-    end
-
-    describe '#used_hints' do
-      it 'returns right value' do
-        allow(game_i.instance_variable_get('@game')).to receive(:hints) { 2 }
-        expect(game_i.used_hints).to be_eql(HINTS_AMOUNT - 2)
-      end
     end
   end
 end

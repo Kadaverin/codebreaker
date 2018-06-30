@@ -12,11 +12,12 @@ module Codebreaker
     end
 
     def play
-      until @game.attempts.zero?
+      until @game.attempts_left.zero?
 
         case guess = input
         when 'r' then show_rules
         when 'h' then give_a_hint
+        when 'c' then show @game.instance_variable_get('@secret')
         else show answer_on guess
         end
 
@@ -94,21 +95,13 @@ module Codebreaker
     end
 
     def game_statistics_for(user_name)
-      status = @game.attempts.zero? ? 'Looser' : 'Winner'
+      status = @game.attempts_left.zero? ? 'Looser' : 'Winner'
 
       "User name : #{user_name} \n" \
       "Game status: #{status} \n" \
-      "Used hints: #{used_hints} \n" \
-      "Used attempts: #{used_attempts} \n"\
+      "Used hints: #{@game.used_hints} \n" \
+      "Used attempts: #{@game.used_attempts} \n"\
       "_________________________________________________\n"
-    end
-
-    def used_attempts
-      ATTEMPTS_AMOUNT - @game.attempts
-    end
-
-    def used_hints
-      HINTS_AMOUNT - @game.hints
     end
   end
 end
