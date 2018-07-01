@@ -17,7 +17,6 @@ module Codebreaker
         case guess = input
         when 'r' then show_rules
         when 'h' then give_a_hint
-        when 'c' then show @game.instance_variable_get('@secret')
         else show answer_on guess
         end
 
@@ -59,6 +58,7 @@ module Codebreaker
 
     def answer_on(input)
       @game.answer_on input
+      @game.history
     rescue ArgumentError => err
       err.message
     end

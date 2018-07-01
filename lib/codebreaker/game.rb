@@ -51,15 +51,16 @@ module Codebreaker
 
     def form_an_answer_for(input)
       temp = @secret.clone
-      input.each_char.with_index do |guess, index|
+      cloned_input = input.clone
+      cloned_input.each_char.with_index do |guess, index|
         if guess == @secret[index]
           @answer << '+'
-          temp[index] = 'x'  # fake value
-          input[index] = 'y' # another fake value
+          temp[index] = 'x' # fake value
+          cloned_input[index] = 'y' # another fake value
         end
       end
       # this fake values will never intersect, so we can do this
-      @answer << '-' * (temp.chars & input.chars).length
+      @answer << '-' * (temp.chars & cloned_input.chars).length
     end
 
     def validate(input)
