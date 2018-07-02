@@ -126,5 +126,20 @@ module Codebreaker
         expect(game.used_hints).to be_eql(Codebreaker::HINTS_AMOUNT - 2)
       end
     end
+
+    describe '#game_over?' do
+      context 'returns right value' do
+        it { expect(game).not_to be_game_over }
+        it {
+          allow(game).to receive(:attempts_left) { 2 }
+          allow(game).to receive(:won?) { true }
+          expect(game).to be_game_over
+        }
+        it {
+          allow(game).to receive(:attempts_left) { 0 }
+          expect(game).to be_game_over
+        }
+      end
+    end
   end
 end

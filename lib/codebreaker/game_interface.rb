@@ -1,6 +1,7 @@
 module Codebreaker
   # Interface for console game 'Codebreacker''
   class GameInterface
+    attr_reader :game
     def initialize(game = Game.new, path_to_log_file = './log_file')
       @game = game
       @path = path_to_log_file
@@ -12,7 +13,7 @@ module Codebreaker
     end
 
     def play
-      until @game.attempts_left.zero?
+      until game.game_over?
 
         case guess = input
         when 'r' then show_rules
@@ -20,9 +21,8 @@ module Codebreaker
         else show answer_on guess
         end
 
-        break if @game.won?
       end
-      @game.won? ? handle_won_game : handle_lost_game
+      game.won? ? handle_won_game : handle_lost_game
     end
 
     def input
@@ -53,12 +53,11 @@ module Codebreaker
     end
 
     def give_a_hint
-      show @game.hint
+      show game.hint
     end
 
     def answer_on(input)
-      @game.answer_on input
-      @game.history
+      game.answer_on input
     rescue ArgumentError => err
       err.message
     end
@@ -95,12 +94,12 @@ module Codebreaker
     end
 
     def game_statistics_for(user_name)
-      status = @game.attempts_left.zero? ? 'Looser' : 'Winner'
+      status = game.won? ? 'Winner' : 'looser'
 
       "User name : #{user_name} \n" \
       "Game status: #{status} \n" \
-      "Used hints: #{@game.used_hints} \n" \
-      "Used attempts: #{@game.used_attempts} \n"\
+      "Used hints: #{game.used_hints} \n" \
+      "Used attempts: #{game.used_attempts} \n"\
       "_________________________________________________\n"
     end
   end

@@ -14,9 +14,11 @@ module Codebreaker
     end
 
     describe '#play' do
-      # have to stub @game.won? because of infinit loop
+      # have to write lambda that returns true on second call because of until loop
       before do
-        allow(game_i.instance_variable_get('@game')).to receive(:won?) { true }
+        step = 1
+        return_true_on_second_call = -> { step == 2 ? true : (step += 1; false) }
+        allow(game_i.game).to receive(:game_over?) { return_true_on_second_call.call }
         allow(game_i).to receive(:show)
       end
       after { game_i.play }
@@ -33,12 +35,13 @@ module Codebreaker
         end
 
         it 'calls #handle_lost_game when user loses' do
-          allow(game_i.instance_variable_get('@game')).to receive(:attempts_left) { 0 }
-          allow(game_i.instance_variable_get('@game')).to receive(:won?) { false }
+          allow(game_i.game).to receive(:game_over?) { true }
+          allow(game_i.game).to receive(:won?) { false }
           expect(game_i).to receive(:handle_lost_game)
         end
 
         it 'calls #handle_won_game when user wins' do
+          allow(game_i.game).to receive(:won?) { true }
           expect(game_i).to receive(:handle_won_game)
         end
       end
@@ -58,13 +61,11 @@ module Codebreaker
 
     describe '#answer_on' do
       it 'calls @game#answer_on' do
-        expect(game_i.instance_variable_get('@game'))
-          .to receive(:answer_on).with('1234')
+        expect(game_i.game).to receive(:answer_on).with('1234')
         game_i.answer_on('1234')
       end
       it 'returns error message if rescue ArgumentError' do
-        allow(game_i.instance_variable_get('@game')).to receive(:answer_on)
-          .and_raise(ArgumentError, 'message')
+        allow(game_i.game).to receive(:answer_on).and_raise(ArgumentError, 'message')
         expect(game_i.answer_on('sdasd')).to be_eql('message')
       end
     end
@@ -118,7 +119,7 @@ module Codebreaker
 
     describe '#give_a_hint' do
       it 'calls #show with @game#hint' do
-        allow(game_i.instance_variable_get('@game')).to receive(:hint) { '2' }
+        allow(game_i.game).to receive(:hint) { '2' }
         expect(game_i).to receive(:show).with('2')
         game_i.give_a_hint
       end
@@ -126,7 +127,7 @@ module Codebreaker
 
     describe '#restart_game' do
       it 'reset @game and calls #play' do
-        expect(game_i.instance_variable_get('@game')).to receive(:new_game).ordered
+        expect(game_i.game).to receive(:new_game).ordered
         expect(game_i).to receive(:play).ordered
         game_i.restart_game
       end

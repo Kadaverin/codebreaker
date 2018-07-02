@@ -30,7 +30,7 @@ module Codebreaker
     end
 
     def hint
-      return NO_HINTS_LEFT if @hints_left.zero?
+      return NO_HINTS_LEFT if hints_left.zero?
       @hints_left -= 1
       @secret[rand(0..3)]
     end
@@ -41,6 +41,10 @@ module Codebreaker
 
     def used_hints
       HINTS_AMOUNT - hints_left
+    end
+
+    def game_over?
+      won? || attempts_left.zero?
     end
 
     private

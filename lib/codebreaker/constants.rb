@@ -9,7 +9,7 @@ module Codebreaker
 
   SUPPORTING_MESSAGE = 'Dont be upset, but you are looser'.freeze
 
-  NO_HINTS_LEFT = 'You have already used all hints'.freeze
+  NO_HINTS_LEFT = 'no hints left'.freeze
 
   ASK_USER_NAME_MESSAGE = 'Enter your name, please'.freeze
 
