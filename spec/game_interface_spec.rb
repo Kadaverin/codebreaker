@@ -16,9 +16,7 @@ module Codebreaker
     describe '#play' do
       # have to write lambda that returns true on second call because of until loop
       before do
-        step = 1
-        return_true_on_second_call = -> { step == 2 ? true : (step += 1; false) }
-        allow(game_i.game).to receive(:game_over?) { return_true_on_second_call.call }
+        allow(game_i.game).to receive(:game_over?).and_return(false, true)
         allow(game_i).to receive(:show)
       end
       after { game_i.play }
